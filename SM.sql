@@ -38,14 +38,14 @@ CREATE TABLE visita (
 );
 
 CREATE TABLE prenotazione (
-    id_visita INT NOT NULL AUTO_INCREMENT,
+    id_prenotazione INT NOT NULL AUTO_INCREMENT,
     cod_medico INT NOT NULL,
     cod_visita INT NOT NULL,
     cod_paziente INT NOT NULL,
     data DATE NOT NULL,
     ora TIME NOT NULL,
     effettuata BOOLEAN NOT NULL,
-    PRIMARY KEY (id_visita),
+    PRIMARY KEY (id_preotazione),
     FOREIGN KEY (cod_medico) REFERENCES medico(id_medico),
     FOREIGN KEY (cod_visita) REFERENCES visita(id_visita),
     FOREIGN KEY (cod_paziente) REFERENCES paziente(id_paziente)

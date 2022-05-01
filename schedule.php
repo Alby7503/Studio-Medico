@@ -8,7 +8,7 @@ require_once 'utility.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appuntamento</title>
+    <title>Prenotazione</title>
     <?php bootstrap(); ?>
 </head>
 
@@ -45,7 +45,7 @@ require_once 'utility.php';
                 <label for="nascita" class="form-label">Data di nascita</label>
                 <input type="date" class="form-control" id="nascita" name="data_nascita" autocomplete="bday" required>
             </div>
-            <!--Data visita-->
+            <!--Data-Ora visita-->
             <div class="col-md-6">
                 <label for="data-ora_visita" class="form-label">Data-Ora visita</label>
                 <input type="datetime-local" class="form-control" id="data-ora_visita" name="data-ora_visita" required>
@@ -56,7 +56,6 @@ require_once 'utility.php';
                 <select id="visita" class="form-select" name="visita" required>
                     <?php
                     $result = query("SELECT id_visita, nome FROM visita");
-                    var_dump($result);
                     while ($row = $result->fetch_assoc()) {
                         echo "<option value='" . $row['id_visita'] . "'>" . $row['nome'] . "</option>";
                     }
@@ -68,7 +67,7 @@ require_once 'utility.php';
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="privacy" required>
                     <label class="form-check-label" for="privacy">
-                        Acconsento al trattamento dei miei dati personali secondo <a href="privacy.txt">i termini e le condizioni del servizio</a>
+                        Acconsento al trattamento dei miei dati personali secondo i <a href="privacy.txt">termini e le condizioni del servizio</a>
                     </label>
                 </div>
             </div>
@@ -77,7 +76,6 @@ require_once 'utility.php';
             </div>
         </form>
         <?php
-        var_dump($_POST);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $info = [
                 'nome',
@@ -95,14 +93,48 @@ require_once 'utility.php';
             $sql .= ') VALUES (';
             $sql .= str_repeat('?,', count($paziente) - 1);
             $sql .= '?)';
-            $result = bind_query($sql, array_values($paziente));
+            var_dump($paziente);
+            list($id_paziente, $result) = bind_query($sql, array_values($paziente));
 
-            $medico = 'SELECT id_medico FROM medico WHERE cod_specializzazione = ' . $_POST['visita'];
             $visita = $_POST['visita'];
-            $paziente = $result->insert_id;
+            $medico = 'SELECT id_medico FROM medico WHERE cod_specializzazione = (SELECT cod_specializzazione FROM visita WHERE id_visita = ?)';
+            $medico = bind_query($medico, [$visita])[1]->fetch_assoc()['id_medico'];
+            var_dump($_POST['data-ora_visita']);
+            list($data, $ora) = explode('T', $_POST['data-ora_visita']);
+
+            $dayOfWeek = date('w', strtotime($data));
+            if ($dayOfWeek == 6 or $dayOfWeek == 0) {
+                if ($ora) {
+                }
+            }
+            echo '<br>DayOfWeeb:';
+            var_dump($dayOfWeek);
+            echo '<br>ORA:';
+            var_dump($ora);
+
+            $appuntamento = [
+                'cod_medico' => $medico,
+                'cod_visita' => $visita,
+                'cod_paziente' => $id_paziente,
+                'data' => $data,
+                'ora' => $ora
+            ];
+
+            $sql = 'INSERT INTO prenotazione(';
+            $sql .= implode(',', array_keys($appuntamento));
+            $sql .= ') VALUES (';
+            $sql .= str_repeat('?,', count($appuntamento) - 1);
+            $sql .= '?)';
+            var_dump($appuntamento);
+            list($id_appuntamento, $result) = bind_query($sql, array_values($appuntamento));
+            var_dump($_POST['data-ora_visita']);
         }
         ?>
     </div>
+
+    <script>
+        document.getElementById('data-ora_visita').min = new Date().toISOString().substring(0, 16);
+    </script>
 </body>
 
 </html>

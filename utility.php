@@ -27,7 +27,8 @@ function bind_query($sql, $params)
     $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
+    $insert_id = $stmt->insert_id;
     $stmt->close();
     $conn->close();
-    return $result;
+    return array($insert_id, $result);
 }
