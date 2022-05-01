@@ -8,12 +8,26 @@ function bootstrap()
 
 function query($sql)
 {
-    $conn = new mysqli('localhost', 'root', '', 'studio_medico');
+    $conn = new mysqli('127.0.0.1', 'root', '', 'studio_medico');
+
     //$conn = new mysqli(socket: '/Users/albertovona/.bitnami/stackman/machines/xampp/volumes/root/var/mysql/mysql.sock', port: 3306, username: 'root', password: '', database: 'studio_medico');
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
     $result = $conn->query($sql);
+    $conn->close();
+    return $result;
+}
+
+function bind_query($sql, $params)
+{
+    $conn = new mysqli('127.0.0.1', 'root', '', 'studio_medico');
+    $stmt = $conn->prepare($sql);
+    $types = str_repeat('s', count($params));
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
     $conn->close();
     return $result;
 }
