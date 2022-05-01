@@ -93,24 +93,12 @@ require_once 'utility.php';
             $sql .= ') VALUES (';
             $sql .= str_repeat('?,', count($paziente) - 1);
             $sql .= '?)';
-            var_dump($paziente);
             list($id_paziente, $result) = bind_query($sql, array_values($paziente));
 
             $visita = $_POST['visita'];
             $medico = 'SELECT id_medico FROM medico WHERE cod_specializzazione = (SELECT cod_specializzazione FROM visita WHERE id_visita = ?)';
             $medico = bind_query($medico, [$visita])[1]->fetch_assoc()['id_medico'];
-            var_dump($_POST['data-ora_visita']);
             list($data, $ora) = explode('T', $_POST['data-ora_visita']);
-
-            $dayOfWeek = date('w', strtotime($data));
-            if ($dayOfWeek == 6 or $dayOfWeek == 0) {
-                if ($ora) {
-                }
-            }
-            echo '<br>DayOfWeeb:';
-            var_dump($dayOfWeek);
-            echo '<br>ORA:';
-            var_dump($ora);
 
             $appuntamento = [
                 'cod_medico' => $medico,
@@ -125,9 +113,7 @@ require_once 'utility.php';
             $sql .= ') VALUES (';
             $sql .= str_repeat('?,', count($appuntamento) - 1);
             $sql .= '?)';
-            var_dump($appuntamento);
             list($id_appuntamento, $result) = bind_query($sql, array_values($appuntamento));
-            var_dump($_POST['data-ora_visita']);
         }
         ?>
     </div>
