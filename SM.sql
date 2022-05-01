@@ -1,4 +1,4 @@
-BEGIN TRANSACTION;
+START TRANSACTION;
 DROP DATABASE IF EXISTS studio_medico;
 CREATE DATABASE studio_medico;
 USE studio_medico;
@@ -45,7 +45,7 @@ CREATE TABLE prenotazione (
     data DATE NOT NULL,
     ora TIME NOT NULL,
     effettuata BOOLEAN NOT NULL,
-    PRIMARY KEY (id_preotazione),
+    PRIMARY KEY (id_prenotazione),
     FOREIGN KEY (cod_medico) REFERENCES medico(id_medico),
     FOREIGN KEY (cod_visita) REFERENCES visita(id_visita),
     FOREIGN KEY (cod_paziente) REFERENCES paziente(id_paziente)

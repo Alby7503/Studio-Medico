@@ -43,7 +43,7 @@ require_once 'utility.php';
             <!--Data di nascita-->
             <div class="col-md-6">
                 <label for="nascita" class="form-label">Data di nascita</label>
-                <input type="date" class="form-control" id="nascita" name="data_nascita" autocomplete="bday" required>
+                <input type="date" class="form-control form-control-sm" id="nascita" name="data_nascita" autocomplete="bday" required>
             </div>
             <!--Data-Ora visita-->
             <div class="col-md-6">
@@ -53,11 +53,11 @@ require_once 'utility.php';
             <!--Tipo visita-->
             <div class="col-md-6">
                 <label for="visita" class="form-label">Visita</label>
-                <select id="visita" class="form-select" name="visita" required>
+                <select id="visita" class="form-select form-select-lg" name="visita" required>
                     <?php
-                    $result = query("SELECT id_visita, nome FROM visita");
+                    $result = query("SELECT id_visita, nome, costo FROM visita");
                     while ($row = $result->fetch_assoc()) {
-                        echo "<option value='" . $row['id_visita'] . "'>" . $row['nome'] . "</option>";
+                        echo '<option value="' . $row['id_visita'] . '">' . $row['nome'] . ' (' . $row['costo'] . '€)</option>';
                     }
                     ?>
                 </select>
