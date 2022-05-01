@@ -44,7 +44,7 @@ CREATE TABLE prenotazione (
     cod_paziente INT NOT NULL,
     data DATE NOT NULL,
     ora TIME NOT NULL,
-    effettuata BOOLEAN NOT NULL,
+    effettuata BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (id_prenotazione),
     FOREIGN KEY (cod_medico) REFERENCES medico(id_medico),
     FOREIGN KEY (cod_visita) REFERENCES visita(id_visita),
