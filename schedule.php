@@ -14,6 +14,7 @@ require_once 'utility.php';
 
 <body>
     <div class="container">
+        <p><?php navbar(); ?></p>
         <h1 class="text-primary">Prenota appuntamento</h1>
         <br>
         <form class="row g-3 needs-validation" method="POST">
@@ -75,6 +76,7 @@ require_once 'utility.php';
                 <button type="submit" class="btn btn-primary">Prenota</button>
             </div>
         </form>
+        <br>
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $info = [
@@ -86,7 +88,14 @@ require_once 'utility.php';
             ];
             $paziente = array();
             foreach ($info as $key) {
-                $paziente[$key] = $_POST[$key];
+                if (isset($_POST[$key]) and !empty($_POST[$key])) {
+                    $paziente[$key] = $_POST[$key];
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">
+                    <strong>Errore!</strong> Non hai inserito tutti i dati richiesti.
+                    </div>';
+                    die();
+                }
             }
             $sql = 'INSERT INTO paziente(';
             $sql .= implode(',', array_keys($paziente));
@@ -114,6 +123,16 @@ require_once 'utility.php';
             $sql .= str_repeat('?,', count($appuntamento) - 1);
             $sql .= '?)';
             list($id_appuntamento, $result) = bind_query($sql, array_values($appuntamento));
+
+            if ($id_appuntamento) {
+                echo '<div class="alert alert-success" role="alert">
+                    Appuntamento prenotato con successo!
+                </div>';
+            } else {
+                echo '<div class="alert alert-danger" role="alert">
+                    Errore durante la prenotazione!
+                </div>';
+            }
         }
         ?>
     </div>

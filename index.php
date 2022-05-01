@@ -14,6 +14,7 @@ require_once 'utility.php';
 
 <body>
     <div class="container">
+        <p><?php navbar(); ?></p>
         <!--Title-->
         <div class="text-center">
             <div style="background-color: cyan;width: 100%;height: 5rem;">
